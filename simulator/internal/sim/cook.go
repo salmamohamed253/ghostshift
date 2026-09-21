@@ -4,5 +4,5 @@ package sim
 type Cook struct {
 	ID              int
 	AvailableAt     float64
-	OrdeerCompleted int
+	OrdersCompleted int
 }
