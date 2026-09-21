@@ -1,6 +1,6 @@
 package sim
 
-//marks timestamp that ahs not yet occured to avoid future bugs and misconseptions
+// marks timestamp that ahs not yet occured to avoid future bugs and misconseptions
 const TimeUnset float64 = -1
 
 // Order represents a single customer order moving through the kitchen
