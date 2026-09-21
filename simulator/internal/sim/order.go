@@ -9,12 +9,12 @@ type Order struct {
 	ArrivalTime   float64
 	PrepStartTime float64
 	PrepEndTime   float64
-	Status        string
+	Status        Status
 }
 type Status string
 
 const (
 	Preparing Status = "PREPARING"
 	Waiting   Status = "WAITING"
-	Competed  Status = "COMPLETED"
+	Completed Status = "COMPLETED"
 )
