@@ -1,25 +1,28 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/salmamohamed253/ghostshift/simulator/internal/sim"
 )
 
 func main() {
-	orders, err := sim.Run(sim.Config{
-		DurationMinutes: 60,
-		OrdersPerHour:   6,
-		Cooks:           2,
-		PrepTimeMinutes: 15,
+	duration := flag.Float64("duration", 240, "Duration of the simulation in minutes")
+	ordersPerHour := flag.Float64("orders", 30, "Number of orders per hour")
+	cooks := flag.Int("cooks", 3, "Number of cooks in the kitchen")
+	prepTime := flag.Float64("prep", 12, "Preparation time for each order in minutes")
+	flag.Parse()
+	result, err := sim.Run(sim.Config{
+		DurationMinutes: *duration,
+		OrdersPerHour:   *ordersPerHour,
+		Cooks:           *cooks,
+		PrepTimeMinutes: *prepTime,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
 		return
 	}
 
-	for _, o := range orders {
-		fmt.Printf("order %d: arrived %.1f, started %.1f, wait %.1f\n",
-			o.ID, o.ArrivalTime, o.PrepStartTime, o.PrepStartTime-o.ArrivalTime)
-	}
+	fmt.Printf("%+v\n", result)
 }

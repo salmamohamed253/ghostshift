@@ -28,9 +28,9 @@ func earliestCook(cooks []Cook) int {
 
 // Run executes one simulation and returns every order with its
 // preparation times filled in.
-func Run(cfg Config) ([]Order, error) {
+func Run(cfg Config) (Result, error) {
 	if err := cfg.Validate(); err != nil {
-		return nil, err
+		return Result{}, err
 	}
 
 	orders := GenerateArrivals(cfg)
@@ -54,5 +54,5 @@ func Run(cfg Config) ([]Order, error) {
 		cooks[c].OrdersCompleted++
 	}
 
-	return orders, nil
+	return computeMetrics(cfg, orders), nil
 }
