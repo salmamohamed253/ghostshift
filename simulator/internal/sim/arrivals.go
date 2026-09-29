@@ -1,26 +1,19 @@
 package sim
 import "math/rand/v2"
 
-func GenerateArrivals(cfg Config) []Order {
-	order := []Order{}
-	// Calculate the total number of orders based on the simulation duration and order rate
-	for i := 0; ; i++ {
-		interval := 60 / cfg.OrdersPerHour
-		arrivalTime := float64(i) * interval
-		if arrivalTime >= cfg.DurationMinutes {
-			break
-		}
-		order = append(order, Order{
+func orderFromTimes(times []float64) []Order {
+	orders := make([]Order, len(times))
+	for i, t := range times {
+		orders[i] = Order{
 			ID:            i + 1,
-			ArrivalTime:   arrivalTime,
+			ArrivalTime:   t,
 			PrepStartTime: TimeUnset,
 			PrepEndTime:   TimeUnset,
 			Status:        Waiting,
-		})
+		}
 	}
-	return order
+	return orders
 }
-
 // arrivalTimes generates customer arrival times, in minutes since opening,
 // for a Poisson arrival process. Gaps between consecutive arrivals are
 // exponentially distributed with mean 60/ordersPerHour minutes.

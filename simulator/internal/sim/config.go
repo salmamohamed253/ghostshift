@@ -8,6 +8,7 @@ type Config struct {
 	OrdersPerHour   float64
 	Cooks           int
 	PrepTimeMinutes float64
+	Seed            uint64
 }
 
 func (c Config) Validate() error {

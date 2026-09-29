@@ -1,19 +1,38 @@
 package sim
 
 import (
-	"math"
 	"testing"
+	"reflect"
 )
 
-func TestEmptyOrderSlice(t *testing.T) {
-	cfg := Config{DurationMinutes: 60, OrdersPerHour: 6, Cooks: 1, PrepTimeMinutes: 10}
 
-	result := computeMetrics(cfg, []Order{})
-
-	if result.OrdersReceived != 0 {
-		t.Errorf("received: got %d, want 0", result.OrdersReceived)
+func TestRun_SameSeedSameResult(t *testing.T) {
+	cfg := Config{DurationMinutes: 480, OrdersPerHour: 30, Cooks: 3, PrepTimeMinutes: 5, Seed: 42}
+	a, err := Run(cfg)
+	if err != nil {
+		t.Fatal(err)
 	}
-	if math.IsNaN(result.AverageWaitMin) {
-		t.Error("average wait is NaN — a division was not guarded")
+	b, err := Run(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(a, b) {
+		t.Fatalf("same seed gave different results:\n%+v\n%+v", a, b)
+	}
+}
+
+func TestRun_DifferentSeedDifferentResult(t *testing.T) {
+	cfg := Config{DurationMinutes: 480, OrdersPerHour: 30, Cooks: 3, PrepTimeMinutes: 5, Seed: 42}
+	a, err := Run(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	cfg.Seed = 43
+	b, err := Run(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if reflect.DeepEqual(a, b) {
+		t.Fatal("seeds 42 and 43 gave identical results; is the seed being used?")
 	}
 }

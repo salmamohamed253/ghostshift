@@ -32,8 +32,15 @@ func Run(cfg Config) (Result, error) {
 	if err := cfg.Validate(); err != nil {
 		return Result{}, err
 	}
+	streams := NewStreams(cfg.Seed)
+	times := arrivalTimes(cfg.OrdersPerHour, cfg.DurationMinutes, streams.Arrivals)
+	return runOrders(cfg,orderFromTimes(times)), nil
+}
 
-	orders := GenerateArrivals(cfg)
+// runOrders executes one simulation and returns every order with its
+// preparation times filled in.
+func runOrders(cfg Config, orders []Order) Result {
+
 	cooks := makeCooks(cfg.Cooks)
 
 	// Note: `for i := range orders`, not `for _, o := range orders`.
@@ -54,5 +61,5 @@ func Run(cfg Config) (Result, error) {
 		cooks[c].OrdersCompleted++
 	}
 
-	return computeMetrics(cfg, orders), nil
+	return computeMetrics(cfg, orders)
 }
